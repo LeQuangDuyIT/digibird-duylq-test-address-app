@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
-import { FaEdit, FaHome, FaMailBulk, FaPhone, FaPhoneAlt, FaSearch, FaTrash } from 'react-icons/fa';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import AddAddressButton from '~/components/AddAddressButton';
 import AddressCard from '~/components/AddressCard';
-import Button from '~/components/Button';
+import Loading from '~/components/Loading';
 import PageLayout from '~/layouts/PageLayout';
+import { addressListState, currentUserState } from '~/recoil/state';
 import AddressAPI from '~/services/AddressAPI';
 import AuthAPI from '~/services/AuthAPI';
 import { TOKEN_TYPES } from '~/utils/constants';
 
 const Address = () => {
-  const [addressList, setAddressList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [addressList, setAddressList] = useRecoilState(addressListState);
+  const setCurrentUser = useSetRecoilState(currentUserState);
 
   useEffect(() => {
     handleLogin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = async () => {
@@ -22,6 +25,7 @@ const Address = () => {
       const response = await AuthAPI.login();
       const accessToken = response.data.data.token;
       if (accessToken) {
+        setCurrentUser({ isAuthenticated: true, data: response.data.data.user });
         localStorage.setItem(TOKEN_TYPES.ACCESS_TOKEN, accessToken);
         fetchAddressData();
       }
@@ -47,7 +51,8 @@ const Address = () => {
   return (
     <PageLayout>
       <div className='flex gap-8 flex-wrap'>
-        <AddAddressButton />
+        {loading && <Loading />}
+        {!loading && <AddAddressButton />}
         {addressList.length > 0 &&
           addressList.map(item => <AddressCard key={item.xid} data={item} />)}
       </div>

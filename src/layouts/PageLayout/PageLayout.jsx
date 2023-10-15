@@ -1,10 +1,15 @@
+import { useRecoilValue } from 'recoil';
 import PageContainer from '~/layouts/PageContainer';
 import Button from '~/components/Button';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '~/routes';
+import { currentUserState } from '~/recoil/state';
+import { FaUserAlt } from 'react-icons/fa';
 
 const PageLayout = ({ children }) => {
   const navigate = useNavigate();
+  const { isAuthenticated, data: userData } = useRecoilValue(currentUserState);
+
   return (
     <div className='text-base'>
       {/* Header */}
@@ -14,7 +19,14 @@ const PageLayout = ({ children }) => {
             <img src='/public/images/logo-350x125.png' alt='DigiBird Logo' className='h-full' />
           </button>
           <div>
-            <Button>Đăng nhập</Button>
+            {isAuthenticated ? (
+              <Button icon={<FaUserAlt />}>
+                <span>{userData.name}</span>
+                <span> - {userData.email}</span>
+              </Button>
+            ) : (
+              <Button onClick={() => navigate(PATH.ADDRESS)}>Đang đăng nhập...</Button>
+            )}
           </div>
         </PageContainer>
       </header>
