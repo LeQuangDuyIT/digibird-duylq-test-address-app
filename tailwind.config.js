@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#FBC60C'
+        primary: '#F7B015'
       },
       dropShadow: {
         'logo-hover': '0 0 2em #646cffaa'

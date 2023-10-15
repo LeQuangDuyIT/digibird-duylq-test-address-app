@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { PATH } from '~/routes';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Home = () => {
         <div className='flex flex-col items-center gap-10'>
           <button
             className='px-12 py-3 bg-primary hover:bg-primary/90 rounded-lg text-xl font-bold'
-            onClick={() => navigate('/address')}
+            onClick={() => navigate(PATH.ADDRESS)}
           >
             Start
           </button>

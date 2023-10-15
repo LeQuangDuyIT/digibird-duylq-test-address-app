@@ -1,8 +1,13 @@
+import AddAddressButton from '~/components/AddAddressButton';
+import PageLayout from '~/layouts/PageLayout';
+
 const Address = () => {
   return (
-    <div>
-      <h1>Address</h1>
-    </div>
+    <PageLayout>
+      <div className='flex gap-8 flex-wrap'>
+        <AddAddressButton />
+      </div>
+    </PageLayout>
   );
 };
 
