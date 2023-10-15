@@ -12,11 +12,11 @@ const AddAddressButton = () => {
   };
 
   return (
-    <div className='w-[calc(33.33%-32px*2/3)] h-56 border-4 p-4'>
-      <div className='flex flex-col justify-center items-center gap-4 h-full border-4 border-dashed'>
+    <div className='w-[calc(33.33%-32px*2/3)] h-64 border-4 p-4 rounded-lg'>
+      <div className='flex flex-col justify-center items-center gap-5 h-full border-4 border-dashed rounded-lg'>
         <div
           className={classNames(
-            'ct-flex-center flex-col w-[30%] aspect-square rounded-full',
+            'ct-flex-center flex-col w-24 aspect-square rounded-full',
             'border-4 border-black border-dashed opacity-10',
             'cursor-pointer hover:border-primary hover:text-primary hover:opacity-100'
           )}
