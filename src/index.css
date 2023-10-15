@@ -11,3 +11,7 @@
 .ct-flex-center {
   @apply flex justify-center items-center;
 }
+
+.ct-address-card-width {
+  @apply w-full max-w-[410px] mx-auto md:w-[calc(50%-32px*1/2)] lg:w-[calc(33.33%-32px*2/3)] lg:mx-0;
+}

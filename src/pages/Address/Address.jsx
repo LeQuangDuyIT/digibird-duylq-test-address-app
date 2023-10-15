@@ -53,7 +53,8 @@ const Address = () => {
       <div className='flex gap-8 flex-wrap'>
         {loading && <Loading />}
         {!loading && <AddAddressButton />}
-        {addressList.length > 0 &&
+        {!loading &&
+          addressList.length > 0 &&
           addressList.map(item => <AddressCard key={item.xid} data={item} />)}
       </div>
     </PageLayout>

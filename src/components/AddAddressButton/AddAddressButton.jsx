@@ -12,7 +12,7 @@ const AddAddressButton = () => {
   };
 
   return (
-    <div className='w-[calc(33.33%-32px*2/3)] h-64 border-4 p-4 rounded-lg'>
+    <div className='ct-address-card-width h-64 border-4 p-4 rounded-lg'>
       <div className='flex flex-col justify-center items-center gap-5 h-full border-4 border-dashed rounded-lg'>
         <div
           className={classNames(

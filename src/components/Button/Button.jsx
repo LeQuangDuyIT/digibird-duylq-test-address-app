@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-const Button = ({ children, icon, outline, text, onClick, className, ...rest }) => {
+const Button = ({ children, icon, outline, text, onClick, className, type, ...rest }) => {
   return (
     <button
       className={classNames(
@@ -14,6 +14,7 @@ const Button = ({ children, icon, outline, text, onClick, className, ...rest }) 
         },
         [className]
       )}
+      type={type}
       onClick={onClick}
       {...rest}
     >

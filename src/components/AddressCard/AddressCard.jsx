@@ -5,9 +5,9 @@ const AddressCard = ({ data }) => {
   return (
     <div
       key={data.xid}
-      className='flex flex-col justify-between w-[calc(33.33%-32px*2/3)] h-64 bg-gray-200 rounded-lg'
+      className='ct-address-card-width flex flex-col justify-between h-64 bg-gray-200 rounded-lg'
     >
-      <div className='flex justify-end datas-start gap-6 p-2 bg-primary/20 rounded-t-lg'>
+      <div className='flex justify-end datas-start gap-6 p-2 bg-primary/20 rounded-lg shadow-address-card'>
         <h3 className='my-4 font-bold text-lg'>{data.name}</h3>
         <div className='ct-flex-center w-16 aspect-square rounded-full bg-primary text-white text-3xl font-bold'>
           {data.name[0]}

@@ -20,9 +20,9 @@ const PageLayout = ({ children }) => {
           </button>
           <div>
             {isAuthenticated ? (
-              <Button icon={<FaUserAlt />}>
+              <Button icon={<FaUserAlt />} onClick={() => navigate(PATH.ADDRESS)}>
                 <span>{userData.name}</span>
-                <span> - {userData.email}</span>
+                <span className='hidden lg:inline'> - {userData.email}</span>
               </Button>
             ) : (
               <Button onClick={() => navigate(PATH.ADDRESS)}>Đang đăng nhập...</Button>
