@@ -25,7 +25,7 @@ const PageLayout = ({ children }) => {
                 <span className='hidden lg:inline'> - {userData.email}</span>
               </Button>
             ) : (
-              <Button onClick={() => navigate(PATH.ADDRESS)}>Đang đăng nhập...</Button>
+              <Button onClick={() => navigate(PATH.ADDRESS)}>Đăng nhập...</Button>
             )}
           </div>
         </PageContainer>
