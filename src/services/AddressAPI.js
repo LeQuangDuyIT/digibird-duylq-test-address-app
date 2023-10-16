@@ -9,6 +9,10 @@ const AddressAPI = {
   create: data => {
     const url = '/self/address';
     return api.post(url, data);
+  },
+  update: (id, data) => {
+    const url = `/seft/address/${id}`;
+    return api.put(url, data);
   }
 };
 

@@ -1,7 +1,22 @@
+import { useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaHome, FaMailBulk, FaPhoneAlt, FaTrash } from 'react-icons/fa';
 import Button from '~/components/Button';
+import { PATH } from '~/routes';
+import { editAddressState } from '~/recoil/state';
 
 const AddressCard = ({ data }) => {
+  const setEditing = useSetRecoilState(editAddressState);
+  const navigate = useNavigate();
+
+  const onClickEdit = () => {
+    setEditing({
+      isEditing: true,
+      originData: data
+    });
+    navigate(`${PATH.EDIT_ADDRESS}/${data.xid}`);
+  };
+
   return (
     <div
       key={data.xid}
@@ -29,7 +44,12 @@ const AddressCard = ({ data }) => {
         </Button>
       </div>
       <div className='flex justify-end gap-8 mt-2 px-4 py-2 bg-gray-300/90 rounded-b-lg'>
-        <Button text icon={<FaEdit />} className='text-gray-600 hover:text-black'>
+        <Button
+          text
+          icon={<FaEdit />}
+          onClick={onClickEdit}
+          className='text-gray-600 hover:text-black'
+        >
           Chỉnh sửa
         </Button>
         <Button text icon={<FaTrash />} className='text-red-500 hover:text-red-700'>

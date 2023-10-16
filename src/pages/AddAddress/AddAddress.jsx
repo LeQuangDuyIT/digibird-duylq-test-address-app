@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import Select from 'react-select';
+import { useRecoilState } from 'recoil';
 import Button from '~/components/Button';
 import Message from '~/components/Message';
 import TextField from '~/components/TextField';
 import PageLayout from '~/layouts/PageLayout';
+import { editAddressState } from '~/recoil/state';
 import AddressAPI from '~/services/AddressAPI';
 import provinceAPI from '~/services/provinceAPI';
 
@@ -31,11 +33,27 @@ const AddAddress = () => {
 
   const [provinceData, setProvinceData] = useState([]);
   const [districtData, setDistrictData] = useState([]);
-  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  const [{ isEditing, originData }, setEditAddressState] = useRecoilState(editAddressState);
 
   useEffect(() => {
     fetchData(provinceAPI.getProvinces, setProvinceData);
   }, []);
+
+  useEffect(() => {
+    const cityObject = provinceData.find(province => province.province_name === originData.city);
+    const sateObject = districtData.find(district => district.district_name === originData.state);
+    if (isEditing) {
+      setValue('name', originData.name);
+      setValue('email', originData.email);
+      setValue('phone', originData.phone);
+      setValue('city', cityObject);
+      setValue('state', sateObject);
+      setValue('address', originData.address);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing]);
 
   const fetchData = async (apiFunction, setDataFunction) => {
     try {
@@ -65,13 +83,27 @@ const AddAddress = () => {
       zipcode: 200,
       ...restValue
     };
-    try {
-      await AddressAPI.create(data);
-      handleResetForm();
-      setShowMessage(true);
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
+    // Update address
+    if (isEditing) {
+      try {
+        const updatedData = { ...data, xid: originData.xid };
+        await AddressAPI.update(originData.xid, updatedData);
+        setMessage('Cập nhật thành công');
+        handleResetForm();
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(err);
+      }
+      // Add address
+    } else {
+      try {
+        await AddressAPI.create(data);
+        handleResetForm();
+        setMessage('Thêm mới thành công');
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(err);
+      }
     }
   };
 
@@ -80,9 +112,13 @@ const AddAddress = () => {
     setValue('city', null);
     setValue('state', null);
     setDistrictData([]);
+    setEditAddressState({
+      isEditing: false,
+      originData: {}
+    });
   };
 
-  const provicenOptions = useMemo(
+  const provinceOptions = useMemo(
     () =>
       provinceData.map(province => ({
         label: province.province_name,
@@ -103,10 +139,12 @@ const AddAddress = () => {
 
   return (
     <>
-      {showMessage && <Message content='Thêm danh bạ thành công!' />}
+      {message && <Message content={message} />}
       <PageLayout>
         <div className='w-1/2 min-w-[calc(350px-16px*2)] mt-8 px-4 lg:px-12 py-4 mx-auto rounded-lg bg-primary/20'>
-          <h1 className='mb-4 text-2xl font-bold text-center text-gray-600'>TẠO DANH BẠ MỚI</h1>
+          <h1 className='mb-4 text-2xl font-bold text-center text-gray-600'>
+            {isEditing ? 'CHỈNH SỬA DANH BẠ' : 'TẠO DANH BẠ MỚI'}
+          </h1>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-3'>
             <TextField
               label={'Tên'}
@@ -165,7 +203,7 @@ const AddAddress = () => {
                   <Select
                     {...field}
                     placeholder='Nhập hoặc bấm chọn'
-                    options={provicenOptions}
+                    options={provinceOptions}
                     onChange={onProvinceChange}
                     classNames={{
                       control: () => 'h-[42px] rounded-md border-[#c7c7c7]'
@@ -216,7 +254,7 @@ const AddAddress = () => {
                 Hủy
               </Button>
               <Button type='submit' className='w-fit'>
-                Tạo
+                {isEditing ? 'Cập nhật' : 'Tạo'}
               </Button>
             </div>
           </form>
