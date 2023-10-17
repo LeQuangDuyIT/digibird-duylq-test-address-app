@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { FaClosedCaptioning, FaSearch, FaXRay } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import Button from '~/components/Button';
 import { addressListState, addressfilterListState } from '~/recoil/state';
 
 const ToolBar = () => {
