@@ -4,11 +4,11 @@ import classNames from 'classnames';
 const TextField = React.forwardRef(({ label, icon, error, required, ...rest }, ref) => {
   return (
     <div>
-      <div className='flex items-center'>
+      <label className='flex items-center'>
         <span>{icon}</span>
         <span>{label}</span>
         <span className={classNames('text-red-500 ml-1', { hidden: !required })}>(*)</span>
-      </div>
+      </label>
       <input
         {...rest}
         ref={ref}

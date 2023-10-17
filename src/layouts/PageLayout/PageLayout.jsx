@@ -11,11 +11,11 @@ const PageLayout = ({ children }) => {
   const { isAuthenticated, data: userData } = useRecoilValue(currentUserState);
 
   return (
-    <div className='text-base'>
+    <div className='min-h-screen text-base'>
       {/* Header */}
       <header className='mb-12 bg-gray-600/80'>
         <PageContainer className='flex justify-between items-center h-16 py-2'>
-          <button className='h-full' onClick={() => navigate(PATH.ROOT)}>
+          <button className='h-full' onClick={() => navigate(PATH.ADDRESS)}>
             <img src='/public/images/logo-350x125.png' alt='DigiBird Logo' className='h-full' />
           </button>
           <div>
@@ -31,9 +31,12 @@ const PageLayout = ({ children }) => {
         </PageContainer>
       </header>
       {/* End Header */}
-      <PageContainer>{children}</PageContainer>
+      <PageContainer className='min-h-[calc(100vh-64px-56px-48px-48px)]'>{children}</PageContainer>
       {/* Footer */}
-      <footer></footer> {/* End Footer */}
+      <footer className='ct-flex-center w-full h-14 mt-12 bg-gray-600/80 text-white'>
+        <p>Copyright ©2023 by Duy L. Q.</p>
+      </footer>{' '}
+      {/* End Footer */}
     </div>
   );
 };

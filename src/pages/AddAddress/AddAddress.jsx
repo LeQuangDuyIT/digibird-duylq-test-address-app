@@ -2,6 +2,7 @@
 /* eslint-disable indent */
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import Select from 'react-select';
 import { useRecoilState } from 'recoil';
 import Button from '~/components/Button';
@@ -9,6 +10,7 @@ import Message from '~/components/Message';
 import TextField from '~/components/TextField';
 import PageLayout from '~/layouts/PageLayout';
 import { editAddressState } from '~/recoil/state';
+import { PATH } from '~/routes';
 import AddressAPI from '~/services/AddressAPI';
 import provinceAPI from '~/services/provinceAPI';
 
@@ -16,8 +18,8 @@ const initalValue = {
   name: '',
   email: '',
   phone: '',
-  city: '',
-  state: '',
+  city: null,
+  state: null,
   address: ''
 };
 
@@ -36,22 +38,32 @@ const AddAddress = () => {
   const [message, setMessage] = useState(null);
 
   const [{ isEditing, originData }, setEditAddressState] = useRecoilState(editAddressState);
+  const currentPath = useLocation();
 
   useEffect(() => {
     fetchData(provinceAPI.getProvinces, setProvinceData);
   }, []);
 
   useEffect(() => {
-    const cityObject = provinceData.find(province => province.province_name === originData.city);
-    const sateObject = districtData.find(district => district.district_name === originData.state);
-    if (isEditing) {
+    const handleFieldForm = () => {
+      const isAddAddressPage = currentPath.pathname === PATH.ADD_ADDRESS;
+      if (!isEditing) return;
+      if (isAddAddressPage) {
+        handleResetForm();
+        return;
+      }
+      const cityObject = provinceData.find(province => province.province_name === originData.city);
+      const sateObject = districtData.find(district => district.district_name === originData.state);
+
       setValue('name', originData.name);
       setValue('email', originData.email);
       setValue('phone', originData.phone);
       setValue('city', cityObject);
       setValue('state', sateObject);
       setValue('address', originData.address);
-    }
+    };
+    handleFieldForm();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditing]);
 
@@ -141,7 +153,7 @@ const AddAddress = () => {
     <>
       {message && <Message content={message} />}
       <PageLayout>
-        <div className='w-1/2 min-w-[calc(350px-16px*2)] mt-8 px-4 lg:px-12 py-4 mx-auto rounded-lg bg-primary/20'>
+        <div className='min-w-[calc(350px-16px*2)] sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 mt-8 px-4 lg:px-12 py-4 mx-auto rounded-lg bg-primary/20'>
           <h1 className='mb-4 text-2xl font-bold text-center text-gray-600'>
             {isEditing ? 'CHỈNH SỬA DANH BẠ' : 'TẠO DANH BẠ MỚI'}
           </h1>

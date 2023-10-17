@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import AddAddressButton from '~/components/AddAddressButton';
 import AddressCard from '~/components/AddressCard';
 import Loading from '~/components/Loading';
 import PageLayout from '~/layouts/PageLayout';
-import { addressListState, currentUserState } from '~/recoil/state';
+import { addressListState, addressfilterListState, currentUserState } from '~/recoil/state';
 import AddressAPI from '~/services/AddressAPI';
 import AuthAPI from '~/services/AuthAPI';
 import { TOKEN_TYPES } from '~/utils/constants';
+import ToolBar from './ToolBar';
 
 const Address = () => {
   const [loading, setLoading] = useState(false);
   const [addressList, setAddressList] = useRecoilState(addressListState);
+  const addressFilterList = useRecoilValue(addressfilterListState);
   const setCurrentUser = useSetRecoilState(currentUserState);
 
   useEffect(() => {
@@ -48,14 +50,17 @@ const Address = () => {
     }
   };
 
+  const renderList = addressFilterList.length > 0 ? addressFilterList : addressList;
+
   return (
     <PageLayout>
-      <div className='flex gap-8 flex-wrap'>
+      {!loading && <ToolBar />}
+      <div className='flex gap-8 flex-wrap mt-8'>
         {loading && <Loading />}
         {!loading && <AddAddressButton />}
         {!loading &&
-          addressList.length > 0 &&
-          addressList.map(item => <AddressCard key={item.xid} data={item} />)}
+          renderList.length > 0 &&
+          renderList.map(item => <AddressCard key={item.xid} data={item} />)}
       </div>
     </PageLayout>
   );

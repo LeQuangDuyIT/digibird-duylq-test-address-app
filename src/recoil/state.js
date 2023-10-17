@@ -2,6 +2,7 @@ import { atom } from 'recoil';
 
 const CURRENT_USER = 'current-user';
 const ADDRESS_LIST = 'address-list';
+const ADDRESS_FILTER_LIST = 'address-filter-list';
 const EDIT_ADDRESS = 'edit-address';
 
 const currentUserState = atom({
@@ -17,6 +18,11 @@ const addressListState = atom({
   default: []
 });
 
+const addressfilterListState = atom({
+  key: ADDRESS_FILTER_LIST,
+  default: []
+});
+
 const editAddressState = atom({
   key: EDIT_ADDRESS,
   default: {
@@ -25,4 +31,4 @@ const editAddressState = atom({
   }
 });
 
-export { currentUserState, addressListState, editAddressState };
+export { currentUserState, addressListState, addressfilterListState, editAddressState };
