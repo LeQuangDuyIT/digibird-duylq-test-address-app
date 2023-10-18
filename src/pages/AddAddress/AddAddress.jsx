@@ -40,47 +40,71 @@ const AddAddress = () => {
   const [{ isEditing, originData }, setEditAddressState] = useRecoilState(editAddressState);
   const currentPath = useLocation();
 
+  // Call API get provinces
   useEffect(() => {
-    fetchData(provinceAPI.getProvinces, setProvinceData);
+    const fetchProvince = async () => {
+      const data = await fetchProvinceAPIData(provinceAPI.getProvinces);
+      setProvinceData(data);
+    };
+    fetchProvince();
   }, []);
 
   useEffect(() => {
-    const handleFieldForm = () => {
+    const handleFieldForm = async () => {
       const isAddAddressPage = currentPath.pathname === PATH.ADD_ADDRESS;
       if (!isEditing) return;
       if (isAddAddressPage) {
         handleResetForm();
         return;
       }
-      const cityObject = provinceData.find(province => province.province_name === originData.city);
-      const sateObject = districtData.find(district => district.district_name === originData.state);
+      // Get city
+      let provinceObject = { label: '', value: '' };
+      let districtObject = { label: '', value: '' };
+
+      const privinces = await fetchProvinceAPIData(provinceAPI.getProvinces);
+      const province = privinces.find(province => province.province_name === originData.city);
+      setProvinceData(privinces);
+      if (province) {
+        provinceObject = { label: province.province_name, value: province.province_id };
+
+        // Get state
+        const districts = await fetchProvinceAPIData(() =>
+          provinceAPI.getDistricts(province.province_id)
+        );
+        setDistrictData(districts);
+        const district = districts.find(district => district.district_name === originData.state);
+        if (district) {
+          districtObject = { label: district.district_name, value: district.district_id };
+        }
+      }
 
       setValue('name', originData.name);
       setValue('email', originData.email);
       setValue('phone', originData.phone);
-      setValue('city', cityObject);
-      setValue('state', sateObject);
+      setValue('city', provinceObject);
+      setValue('state', districtObject);
       setValue('address', originData.address);
     };
     handleFieldForm();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditing]);
 
-  const fetchData = async (apiFunction, setDataFunction) => {
+  const fetchProvinceAPIData = async apiFunction => {
     try {
       const response = await apiFunction();
-      setDataFunction(response.data.results);
+      return response.data.results;
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);
     }
   };
 
-  const onProvinceChange = objectValue => {
+  // Get districts when province change
+  const onProvinceChange = async objectValue => {
     setValue('city', objectValue);
     setValue('state', null);
-    fetchData(() => provinceAPI.getDistricts(objectValue.value), setDistrictData);
+    const stateData = await fetchProvinceAPIData(() => provinceAPI.getDistricts(objectValue.value));
+    setDistrictData(stateData);
   };
 
   const onSubmit = async formValue => {

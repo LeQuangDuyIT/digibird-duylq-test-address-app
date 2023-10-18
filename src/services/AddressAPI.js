@@ -11,7 +11,7 @@ const AddressAPI = {
     return api.post(url, data);
   },
   update: (id, data) => {
-    const url = `/seft/address/${id}`;
+    const url = `/self/address/${id}`;
     return api.put(url, data);
   }
 };
